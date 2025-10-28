@@ -84,7 +84,11 @@ const CalendlyWidget = () => {
         document.body.appendChild(script);
 
         return () => {
-            document.body.removeChild(script);
+            // Check if script exists before trying to remove
+            const existingScript = document.querySelector('script[src="https://assets.calendly.com/assets/external/widget.js"]');
+            if (existingScript) {
+                document.body.removeChild(existingScript);
+            }
         }
     }, []);
 
@@ -96,6 +100,46 @@ const CalendlyWidget = () => {
         </div>
     );
 }
+
+// --- Logo Cloud Component ---
+const LogoCloud = () => {
+    const logos = [
+      { name: 'Google', url: 'https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg' },
+      { name: 'Electronic Arts (EA)', url: 'https://upload.wikimedia.org/wikipedia/commons/0/0d/Electronic-Arts-Logo.svg' },
+      { name: 'Shell', url: 'https://upload.wikimedia.org/wikipedia/en/e/e8/Shell_logo.svg' },
+      { name: 'Best Buy', url: 'https://upload.wikimedia.org/wikipedia/commons/f/f5/Best_Buy_Logo.svg' },
+      { name: 'BMO', url: 'https://upload.wikimedia.org/wikipedia/commons/0/03/BMO_Logo.svg' },
+      { name: 'lululemon', url: 'https://upload.wikimedia.org/wikipedia/commons/2/22/Lululemon_Athletica_logo.svg' },
+      { name: 'Intuit', url: 'https://upload.wikimedia.org/wikipedia/commons/a/ae/Intuit_Logo.svg' },
+      { name: 'Freelancer.com', url: 'https://upload.wikimedia.org/wikipedia/commons/b/b4/FL_LOGO-REDUCTION.png' },
+    ];
+
+    return (
+        <section className="flex flex-col gap-4 text-center">
+            <h2 className="text-xl font-semibold text-muted-foreground">
+                Trusted by Industry Leaders and Innovators
+            </h2>
+            <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-6">
+                {logos.map((logo) => (
+                    <img
+                        key={logo.name}
+                        title={logo.name}
+                        className="h-8 md:h-10 w-auto filter grayscale opacity-70 transition-all duration-300 hover:grayscale-0 hover:opacity-100"
+                        src={logo.url}
+                        alt={logo.name}
+                        // Add error handling for broken links
+                        onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+                            const target = e.target as HTMLImageElement;
+                            console.error(`Logo for "${logo.name}" failed to load from: ${logo.url}`);
+                            target.style.display = 'none'; // Hide broken image icon
+                        }}
+                    />
+                ))}
+            </div>
+        </section>
+    );
+}
+
 
 // --- Main Page Component ---
 export default function App() {
@@ -112,7 +156,7 @@ export default function App() {
           <div className="flex flex-col gap-2">
             <h1 className="text-4xl font-bold tracking-tight">Fractional CTO: From Idea to Successful Exit</h1>
             <p className="text-lg text-muted-foreground">
-              I partner with early-stage companies to architect scalable, investor-ready AI technology. I build high-performing engineering teams and leverage MLOps to solve critical business problems, driving measurable growth and leading to commercial success.
+              As your Fractional CTO, I embed with your team to build a scalable, fundable, and commercially successful product. I provide the technical leadership you need to avoid costly mistakes, build a high-performing team, and turn your vision into enterprise-ready AI.
             </p>
             <div className="flex gap-4 mt-4 justify-center md:justify-start">
               <Button size="lg" href="#booking">
@@ -131,20 +175,23 @@ export default function App() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Card>
               <CardHeader><CardTitle>Successful AI-SaaS Exit</CardTitle></CardHeader>
-              <CardContent>Led Dynamic Needs Analysis from concept to a successful strategic acquisition, architecting its core AI-powered SaaS platform and scaling the team.</CardContent>
+              <CardContent>From the ground up, I architected the core AI platform and scaled the team at Dynamic Needs Analysis, leading directly to a successful strategic acquisition.</CardContent>
             </Card>
             <Card>
               <CardHeader><CardTitle>Trusted by Enterprise</CardTitle></CardHeader>
-              <CardContent>Delivered complex AI/ML and MLOps solutions for industry leaders, including BMO (banking), Asurion (insurance), and Electronic Arts (gaming).</CardContent>
+              <CardContent>My AI/ML and MLOps solutions have been trusted to solve complex challenges for industry leaders like BMO, Asurion, and Electronic Arts.</CardContent>
             </Card>
             <Card>
               <CardHeader><CardTitle>Multi-Sector AI Automation</CardTitle></CardHeader>
-              <CardContent>Created automation tools that fundamentally improved operations in FinTech, InsurTech, and LegalTech, delivering quantifiable improvements in efficiency.</CardContent>
+              <CardContent>I've built automation tools that drove down operational costs and delivered quantifiable efficiency in FinTech, InsurTech, and LegalTech—proving my ability to apply AI to new domains.</CardContent>
             </Card>
           </div>
         </section>
 
-        {/* Section 3: Core Expertise */}
+        {/* Section 3: Logo Cloud */}
+        <LogoCloud />
+
+        {/* Section 4: Core Expertise */}
         <section className="flex flex-col gap-4 items-center">
           <h2 className="text-3xl font-bold">Core Expertise</h2>
           <div className="flex flex-wrap gap-2 justify-center">
@@ -159,14 +206,14 @@ export default function App() {
           </div>
         </section>
 
-        {/* Section 4: Vero Ventures */}
+        {/* Section 5: Vero Ventures */}
         <section>
             <Card className="text-center">
                 <CardHeader>
-                    <CardTitle>Need a Full Engineering Team?</CardTitle>
+                    <CardTitle>What If You Need More Than a CTO?</CardTitle>
                 </CardHeader>
                 <CardContent className="flex flex-col items-center gap-4">
-                    <p>In addition to Fractional CTO consulting, my company, Vero Ventures, provides software engineering teams for hire. We specialize in building and scaling MVPs for funded entrepreneurs who need dedicated development work.</p>
+                    <p>Often, fractional CTO leadership uncovers the need for a dedicated build team. My company, Vero Ventures, provides elite software engineering talent to build and scale your MVP, ensuring my strategic vision is executed with precision.</p>
                     <Button variant="outline" href="https://veroventures.com/" target="_blank" rel="noopener noreferrer">
                         Explore Vero Ventures <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
@@ -174,9 +221,9 @@ export default function App() {
             </Card>
         </section>
         
-        {/* Section 5: Book a Consultation (Calendly) */}
+        {/* Section 6: Book a Consultation (Calendly) */}
         <section id="booking" className="flex flex-col gap-4 text-center">
-          <h2 className="text-3xl font-bold">Book Your Consultation</h2>
+          <h2 className="text-3xl font-bold">Let's Build Your Vision.</h2>
           <p className="text-lg text-muted-foreground">Find a time below to discuss your technology goals, AI strategy, or next MVP.</p>
           <div className="rounded-lg overflow-hidden border">
              <CalendlyWidget />
@@ -184,10 +231,11 @@ export default function App() {
         </section>
         
       </div>
-       {/* Section 6: Footer */}
+       {/* Section 7: Footer */}
        <footer className="text-center text-muted-foreground text-sm pt-16">
         <p>© 2024 Yaniv Talmor. All rights reserved. | <a href="https://www.linkedin.com/in/yanivtalmor" target="_blank" rel="noopener noreferrer" className="underline hover:text-foreground">LinkedIn</a></p>
       </footer>
     </main>
   );
 }
+
