@@ -111,7 +111,7 @@ const LogoCloud = () => {
       { name: 'BMO', url: 'https://upload.wikimedia.org/wikipedia/commons/0/03/BMO_Logo.svg' },
       { name: 'lululemon', url: 'https://upload.wikimedia.org/wikipedia/commons/2/22/Lululemon_Athletica_logo.svg' },
       { name: 'Intuit', url: 'https://upload.wikimedia.org/wikipedia/commons/a/ae/Intuit_Logo.svg' },
-      { name: 'Freelancer.com', url: 'https://upload.wikimedia.org/wikipedia/commons/b/b4/FL_LOGO-REDUCTION.png' },
+      // { name: 'Freelancer.com', url: 'https://upload.wikimedia.org/wikipedia/commons/b/b4/FL_LOGO-REDUCTION.png' },
     ];
 
     return (
