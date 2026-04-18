@@ -1,13 +1,6 @@
 {
-  "attribution": {
-    "commit": "",
-    "pr": ""
-  },
-  "permissions": {
-    "allow": [
-      "Bash(git add *)",
-      "Bash(git commit -m ' *)",
-      "Bash(git push *)"
-    ]
-  }
+    "attribution": {
+        "commit": "",
+        "pr": ""
+    }
 }
