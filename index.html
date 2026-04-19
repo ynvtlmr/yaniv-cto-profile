@@ -1,107 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Yaniv Talmor - Fractional CTO</title>
 
-    <!-- No FOUC: apply theme class before paint -->
-    <script>
-      (function() {
-        var saved = localStorage.getItem('theme');
-        if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-          document.documentElement.classList.add('dark');
-        }
-      })();
-    </script>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Yaniv Talmor - Fractional CTO</title>
 
-    <!-- Google Fonts: Geist + Geist Mono -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet" />
+        <!-- No FOUC: apply theme class before paint -->
+        <script>
+            (function () {
+                var saved = localStorage.getItem('theme');
+                if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                    document.documentElement.classList.add('dark');
+                }
+            })();
+        </script>
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        darkMode: 'class',
-        theme: {
-          extend: {
-            fontFamily: {
-              sans: ['Geist', 'system-ui', 'sans-serif'],
-              mono: ['Geist Mono', 'ui-monospace', 'monospace'],
-            },
-            colors: {
-              background: 'hsl(var(--background))',
-              foreground: 'hsl(var(--foreground))',
-              card: 'hsl(var(--card))',
-              border: 'hsl(var(--border))',
-              muted: {
-                DEFAULT: 'hsl(var(--muted))',
-                foreground: 'hsl(var(--muted-foreground))',
-              },
-              accent: {
-                DEFAULT: 'hsl(var(--accent))',
-                bright: 'hsl(var(--accent-bright))',
-              },
-              emerald: 'hsl(var(--emerald))',
-            },
-          },
-        },
-      }
-    </script>
+        <!-- Google Fonts: Geist + Geist Mono -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500&display=swap"
+            rel="stylesheet" />
+        <link href="/style.css" rel="stylesheet">
+    </head>
 
-    <style>
-      :root {
-        --background: 60 10% 97%;
-        --foreground: 220 18% 8%;
-        --card: 0 0% 100%;
-        --muted: 60 8% 93%;
-        --muted-foreground: 220 8% 42%;
-        --border: 30 8% 86%;
-        --accent: 32 45% 48%;
-        --accent-bright: 38 75% 70%;
-        --emerald: 160 40% 28%;
-      }
+    <body class="bg-background text-foreground font-sans antialiased">
+        <div id="root"></div>
+        <script type="module" src="/index.tsx"></script>
+    </body>
 
-      html.dark {
-        --background: 220 18% 6%;
-        --foreground: 60 12% 94%;
-        --card: 220 16% 9%;
-        --muted: 220 12% 14%;
-        --muted-foreground: 220 10% 62%;
-        --border: 220 10% 18%;
-        --accent: 32 55% 60%;
-        --accent-bright: 38 80% 80%;
-        --emerald: 160 45% 55%;
-      }
-
-      body {
-        background-image:
-          radial-gradient(ellipse 40% 20% at 50% 0%, hsl(32 55% 55% / 0.16), transparent 100%),
-          radial-gradient(circle, hsl(220 18% 8% / 0.07) 1px, transparent 1px);
-        background-size: auto, 28px 28px;
-      }
-
-      html.dark body {
-        background-image:
-          radial-gradient(ellipse 40% 20% at 50% 0%, hsl(32 55% 60% / 0.18), transparent 100%),
-          radial-gradient(circle, hsl(60 12% 94% / 0.04) 1px, transparent 1px);
-        background-size: auto, 28px 28px;
-      }
-    </style>
-
-  <script type="importmap">
-{
-  "imports": {
-    "react/": "https://aistudiocdn.com/react@^19.2.0/",
-    "react": "https://aistudiocdn.com/react@^19.2.0",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/"
-  }
-}
-</script>
-</head>
-  <body class="bg-background text-foreground font-sans antialiased">
-    <div id="root"></div>
-    <script type="module" src="/index.tsx"></script>
-  </body>
 </html>
