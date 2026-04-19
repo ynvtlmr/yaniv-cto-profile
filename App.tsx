@@ -540,7 +540,8 @@ export default function App() {
                 <footer className="mt-24 pt-8 border-t border-border">
                     <div className="flex flex-col md:flex-row md:justify-between gap-3 items-center md:items-start">
                         <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
-                            © 2024 Yaniv Talmor. All rights reserved.
+                            © {new Date().getFullYear()} Yaniv Talmor. All
+                            rights reserved.
                         </p>
                         <a
                             href="https://www.linkedin.com/in/yanivtalmor"
