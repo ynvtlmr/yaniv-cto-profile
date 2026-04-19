@@ -309,9 +309,6 @@ export default function App() {
                         <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-10 md:gap-16 items-center">
                             {/* Copy */}
                             <div className="flex flex-col gap-6 text-center md:text-left order-2 md:order-1">
-                                <p className="font-sans font-semibold text-[13px] uppercase tracking-[0.2em] text-accent">
-                                    Yaniv Talmor
-                                </p>
                                 <h1 className="font-sans font-semibold text-4xl md:text-6xl tracking-[-0.03em] leading-[1.02] text-balance">
                                     From Idea to Successful{" "}
                                     <span
@@ -351,13 +348,17 @@ export default function App() {
                             </div>
 
                             {/* Portrait */}
-                            <div className="flex flex-col items-center gap-2 order-1 md:order-2">
+                            <div className="flex flex-col items-center gap-4 order-1 md:order-2">
                                 <div className="h-64 w-64 md:h-80 md:w-80 rounded-full overflow-hidden border border-border">
                                     <img
                                         src="/Yaniv-Talmor-Profile-Square.jpg"
                                         alt="Yaniv Talmor"
                                         className="h-full w-full object-cover"
                                     />
+                                </div>
+                                <div className="text-center">
+                                    <p className="font-sans font-semibold text-base tracking-[-0.01em] text-foreground">Yaniv Talmor</p>
+                                    <p className="font-sans text-[13px] uppercase tracking-[0.18em] text-accent mt-0.5">Fractional CTO</p>
                                 </div>
                             </div>
                         </div>

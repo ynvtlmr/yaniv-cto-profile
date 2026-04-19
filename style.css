@@ -19,6 +19,10 @@
     --color-emerald: hsl(var(--emerald));
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 :root {
     --background: 60 10% 97%;
     --foreground: 220 18% 8%;
