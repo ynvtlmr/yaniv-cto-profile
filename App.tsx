@@ -1,241 +1,560 @@
-import React from 'react';
+import React from "react";
 
-// --- Helper Functions ---
-const cn = (...classes: (string | undefined | null | false)[]) => classes.filter(Boolean).join(' ');
+// --- Utilities ---
+const cn = (...classes: (string | undefined | null | false)[]) =>
+    classes.filter(Boolean).join(" ");
 
-// --- Inlined UI Component Stubs (Styled with Tailwind to mimic Shadcn) ---
-// NOTE: These are simplified versions for this self-contained demo.
+// --- Theme ---
+function useTheme(): [string, () => void] {
+    const [theme, setTheme] = React.useState<string>(() => {
+        const saved = localStorage.getItem("theme");
+        if (saved) return saved;
+        return window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light";
+    });
 
-// Lucide Icons as SVG components
+    React.useEffect(() => {
+        if (theme === "dark") {
+            document.documentElement.classList.add("dark");
+        } else {
+            document.documentElement.classList.remove("dark");
+        }
+        localStorage.setItem("theme", theme);
+    }, [theme]);
+
+    const toggle = () => setTheme((t) => (t === "light" ? "dark" : "light"));
+    return [theme, toggle];
+}
+
+// --- Icons ---
 const Linkedin = (props: React.SVGProps<SVGSVGElement>) => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect width="4" height="12" x="2" y="9"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        {...props}
+    >
+        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+        <rect width="4" height="12" x="2" y="9" />
+        <circle cx="4" cy="4" r="2" />
+    </svg>
 );
+
 const ArrowDown = (props: React.SVGProps<SVGSVGElement>) => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M12 5v14"></path><path d="m19 12-7 7-7-7"></path></svg>
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        {...props}
+    >
+        <path d="M12 5v14" />
+        <path d="m19 12-7 7-7-7" />
+    </svg>
 );
+
 const ArrowRight = (props: React.SVGProps<SVGSVGElement>) => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        {...props}
+    >
+        <path d="M5 12h14" />
+        <path d="m12 5 7 7-7 7" />
+    </svg>
 );
 
-// Button Component
+const SunIcon = () => (
+    <svg
+        width="14"
+        height="14"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.25"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+    >
+        <circle cx="12" cy="12" r="5" />
+        <line x1="12" y1="1" x2="12" y2="3" />
+        <line x1="12" y1="21" x2="12" y2="23" />
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+        <line x1="1" y1="12" x2="3" y2="12" />
+        <line x1="21" y1="12" x2="23" y2="12" />
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+    </svg>
+);
+
+const MoonIcon = () => (
+    <svg
+        width="14"
+        height="14"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.25"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+    >
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+    </svg>
+);
+
+// --- Theme Toggle ---
+const ThemeToggle: React.FC<{ theme: string; toggle: () => void }> = ({
+    theme,
+    toggle,
+}) => (
+    <button
+        onClick={toggle}
+        aria-label="Toggle theme"
+        className="fixed top-5 right-5 z-50 w-9 h-9 flex items-center justify-center backdrop-blur-md rounded-sm text-muted-foreground hover:text-foreground hover:border-accent transition-colors duration-300"
+    >
+        {theme === "dark" ? <SunIcon /> : <MoonIcon />}
+    </button>
+);
+
+// --- Section Header ---
+interface SectionHeaderProps {
+    title?: string;
+    className?: string;
+}
+const SectionHeader: React.FC<SectionHeaderProps> = ({ title, className }) => (
+    <div className={cn(className)}>
+        {title && (
+            <h2 className="font-sans font-semibold text-4xl md:text-5xl tracking-[-0.02em] text-foreground">
+                {title}
+            </h2>
+        )}
+    </div>
+);
+
+// --- Button ---
 type ButtonProps = React.AnchorHTMLAttributes<HTMLAnchorElement> & {
-  variant?: 'default' | 'outline';
-  size?: 'lg' | 'default';
-  children: React.ReactNode;
+    variant?: "default" | "outline";
+    size?: "lg" | "default";
+    children: React.ReactNode;
 };
-const Button: React.FC<ButtonProps> = ({ variant = 'default', size = 'default', className, children, ...props }) => {
-  const baseClasses = 'inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50';
-  const variantClasses = {
-    default: 'bg-slate-900 text-slate-50 hover:bg-slate-900/90',
-    outline: 'border border-slate-200 bg-transparent hover:bg-slate-100 hover:text-slate-900',
-  };
-  const sizeClasses = {
-    default: 'h-10 px-4 py-2',
-    lg: 'h-11 rounded-md px-8',
-  };
-  return (
-    <a className={cn(baseClasses, variantClasses[variant], sizeClasses[size], className)} {...props}>
-      {children}
-    </a>
-  );
+const Button: React.FC<ButtonProps> = ({
+    variant = "default",
+    size = "default",
+    className,
+    children,
+    ...props
+}) => {
+    const base =
+        "inline-flex items-center justify-center whitespace-nowrap rounded-sm font-sans font-medium uppercase tracking-[0.18em] transition-colors duration-300 focus-visible:outline-none";
+    const variants = {
+        default:
+            "bg-foreground text-background border border-foreground hover:bg-accent hover:border-accent hover:text-background",
+        outline:
+            "bg-transparent text-foreground border border-border hover:border-accent hover:text-accent",
+    };
+    const sizes = {
+        default: "h-10 px-5 text-[11px]",
+        lg: "h-12 px-7 text-[12px]",
+    };
+    return (
+        <a
+            className={cn(base, variants[variant], sizes[size], className)}
+            {...props}
+        >
+            {children}
+        </a>
+    );
 };
 
-// Card Components
-const Card: React.FC<{ children: React.ReactNode, className?: string }> = ({ children, className }) => (
-  <div className={cn("rounded-lg border bg-white text-slate-950 shadow-sm", className)}>{children}</div>
-);
-const CardHeader: React.FC<{ children: React.ReactNode, className?: string }> = ({ children, className }) => (
-  <div className={cn("flex flex-col space-y-1.5 p-6", className)}>{children}</div>
-);
-const CardTitle: React.FC<{ children: React.ReactNode, className?: string }> = ({ children, className }) => (
-  <h3 className={cn("text-xl font-semibold leading-none tracking-tight", className)}>{children}</h3>
-);
-const CardContent: React.FC<{ children: React.ReactNode, className?: string }> = ({ children, className }) => (
-  <div className={cn("p-6 pt-0 text-muted-foreground", className)}>{children}</div>
-);
-
-// Avatar Components
-const Avatar: React.FC<{ children: React.ReactNode, className?: string }> = ({ children, className }) => (
-  <div className={cn("relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full", className)}>{children}</div>
-);
-const AvatarImage: React.FC<React.ImgHTMLAttributes<HTMLImageElement>> = (props) => (
-  <img className="aspect-square h-full w-full" {...props} />
-);
-const AvatarFallback: React.FC<{ children: React.ReactNode, className?: string }> = ({ children, className }) => (
-  <span className={cn("flex h-full w-full items-center justify-center rounded-full bg-slate-100", className)}>
-    {children}
-  </span>
-);
-
-// Badge Component
-const Badge: React.FC<{ children: React.ReactNode, className?: string }> = ({ children, className }) => (
-  <div className={cn("inline-flex items-center rounded-full border border-slate-200 px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 bg-slate-100 text-slate-900", className)}>
-    {children}
-  </div>
+// --- Card ---
+const Card: React.FC<{ children: React.ReactNode; className?: string }> = ({
+    children,
+    className,
+}) => (
+    <div
+        className={cn(
+            "bg-card border border-border rounded-sm relative",
+            className,
+        )}
+    >
+        {children}
+    </div>
 );
 
 // --- Calendly Widget ---
+const CALENDLY_SCRIPT_SRC =
+    "https://assets.calendly.com/assets/external/widget.js";
+
 const CalendlyWidget = () => {
     React.useEffect(() => {
-        const script = document.createElement('script');
-        script.type = 'text/javascript';
-        script.src = 'https://assets.calendly.com/assets/external/widget.js';
+        if (document.querySelector(`script[src="${CALENDLY_SCRIPT_SRC}"]`))
+            return;
+        const script = document.createElement("script");
+        script.type = "text/javascript";
+        script.src = CALENDLY_SCRIPT_SRC;
         script.async = true;
         document.body.appendChild(script);
-
-        return () => {
-            // Check if script exists before trying to remove
-            const existingScript = document.querySelector('script[src="https://assets.calendly.com/assets/external/widget.js"]');
-            if (existingScript) {
-                document.body.removeChild(existingScript);
-            }
-        }
     }, []);
 
     return (
-        <div 
-            className="calendly-inline-widget" 
-            data-url="https://calendly.com/veroventures/chat" 
-            style={{ minWidth: '320px', height: '700px' }}>
-        </div>
+        <div
+            className="calendly-inline-widget"
+            data-url="https://calendly.com/veroventures/chat"
+            style={{ minWidth: "320px", height: "700px" }}
+        />
     );
-}
+};
 
-// --- Logo Cloud Component ---
+// --- Logo Cloud ---
 const LogoCloud = () => {
     const logos = [
-      { name: 'Google', url: 'https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg' },
-      { name: 'Electronic Arts (EA)', url: 'https://upload.wikimedia.org/wikipedia/commons/0/0d/Electronic-Arts-Logo.svg' },
-      { name: 'Shell', url: 'https://upload.wikimedia.org/wikipedia/en/e/e8/Shell_logo.svg' },
-      { name: 'Best Buy', url: 'https://upload.wikimedia.org/wikipedia/commons/f/f5/Best_Buy_Logo.svg' },
-      { name: 'BMO', url: 'https://upload.wikimedia.org/wikipedia/commons/0/03/BMO_Logo.svg' },
-      { name: 'lululemon', url: 'https://upload.wikimedia.org/wikipedia/commons/2/22/Lululemon_Athletica_logo.svg' },
-      { name: 'Intuit', url: 'https://upload.wikimedia.org/wikipedia/commons/a/ae/Intuit_Logo.svg' },
-      // { name: 'Freelancer.com', url: 'https://upload.wikimedia.org/wikipedia/commons/b/b4/FL_LOGO-REDUCTION.png' },
+        {
+            name: "Google",
+            url: "https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg",
+        },
+        {
+            name: "Electronic Arts (EA)",
+            url: "https://upload.wikimedia.org/wikipedia/commons/0/0d/Electronic-Arts-Logo.svg",
+        },
+        {
+            name: "Shell",
+            url: "https://upload.wikimedia.org/wikipedia/en/e/e8/Shell_logo.svg",
+        },
+        {
+            name: "Best Buy",
+            url: "https://upload.wikimedia.org/wikipedia/commons/f/f5/Best_Buy_Logo.svg",
+        },
+        {
+            name: "BMO",
+            url: "https://upload.wikimedia.org/wikipedia/commons/0/03/BMO_Logo.svg",
+        },
+        {
+            name: "lululemon",
+            url: "https://upload.wikimedia.org/wikipedia/commons/2/22/Lululemon_Athletica_logo.svg",
+        },
+        {
+            name: "Intuit",
+            url: "https://upload.wikimedia.org/wikipedia/commons/a/ae/Intuit_Logo.svg",
+        },
     ];
 
     return (
-        <section className="flex flex-col gap-4 text-center">
-            <h2 className="text-xl font-semibold text-muted-foreground">
+        <section className="flex flex-col gap-8">
+            <SectionHeader />
+            <p className="font-sans font-light text-2xl md:text-3xl text-muted-foreground text-center">
                 Trusted by Industry Leaders and Innovators
-            </h2>
-            <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-6">
+            </p>
+            <div className="flex flex-wrap items-center justify-center gap-x-14 gap-y-8">
                 {logos.map((logo) => (
                     <img
                         key={logo.name}
                         title={logo.name}
-                        className="h-8 md:h-10 w-auto filter grayscale opacity-70 transition-all duration-300 hover:grayscale-0 hover:opacity-100"
-                        src={logo.url}
                         alt={logo.name}
-                        // Add error handling for broken links
-                        onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-                            const target = e.target as HTMLImageElement;
-                            console.error(`Logo for "${logo.name}" failed to load from: ${logo.url}`);
-                            target.style.display = 'none'; // Hide broken image icon
+                        src={logo.url}
+                        className="h-7 md:h-9 w-auto filter grayscale opacity-55 hover:grayscale-0 hover:opacity-100 transition-all duration-300"
+                        onError={(
+                            e: React.SyntheticEvent<HTMLImageElement>,
+                        ) => {
+                            (e.target as HTMLImageElement).style.display =
+                                "none";
                         }}
                     />
                 ))}
             </div>
         </section>
     );
-}
+};
 
-
-// --- Main Page Component ---
+// --- Main App ---
 export default function App() {
-  return (
-    <main className="container mx-auto max-w-4xl px-4 py-16">
-      <div className="flex flex-col gap-16">
+    const [theme, toggleTheme] = useTheme();
 
-        {/* Section 1: Hero */}
-        <section className="flex flex-col md:flex-row items-center gap-8 text-center md:text-left">
-          <Avatar className="h-32 w-32">
-            <AvatarImage src="/Yaniv-Talmor-Profile-Square.jpg" alt="Yaniv Talmor" />
-            <AvatarFallback>YT</AvatarFallback>
-          </Avatar>
-          <div className="flex flex-col gap-2">
-            <h1 className="text-4xl font-bold tracking-tight">Fractional CTO: From Idea to Successful Exit</h1>
-            <p className="text-lg text-muted-foreground">
-              As your Fractional CTO, I embed with your team to build a scalable, fundable, and commercially successful product. I provide the technical leadership you need to avoid costly mistakes, build a high-performing team, and turn your vision into enterprise-ready AI.
-            </p>
-            <div className="flex gap-4 mt-4 justify-center md:justify-start">
-              <Button size="lg" href="#booking">
-                <ArrowDown className="mr-2 h-4 w-4" /> Book a Consultation
-              </Button>
-              <Button variant="outline" size="lg" href="https://www.linkedin.com/in/yanivtalmor" target="_blank" rel="noopener noreferrer">
-                <Linkedin className="mr-2 h-4 w-4" /> View LinkedIn
-              </Button>
-            </div>
-          </div>
-        </section>
+    return (
+        <>
+            <ThemeToggle theme={theme} toggle={toggleTheme} />
 
-        {/* Section 2: Proven Results */}
-        <section className="flex flex-col gap-4">
-          <h2 className="text-3xl font-bold text-center">Proven Results</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Card>
-              <CardHeader><CardTitle>Successful AI-SaaS Exit</CardTitle></CardHeader>
-              <CardContent>From the ground up, I architected the core AI platform and scaled the team at Dynamic Needs Analysis, leading directly to a successful strategic acquisition.</CardContent>
-            </Card>
-            <Card>
-              <CardHeader><CardTitle>Trusted by Enterprise</CardTitle></CardHeader>
-              <CardContent>My AI/ML and MLOps solutions have been trusted to solve complex challenges for industry leaders like BMO, Asurion, and Electronic Arts.</CardContent>
-            </Card>
-            <Card>
-              <CardHeader><CardTitle>Multi-Sector AI Automation</CardTitle></CardHeader>
-              <CardContent>I've built automation tools that drove down operational costs and delivered quantifiable efficiency in FinTech, InsurTech, and LegalTech—proving my ability to apply AI to new domains.</CardContent>
-            </Card>
-          </div>
-        </section>
+            <main className="max-w-6xl mx-auto px-6 md:px-10 py-24 md:py-32">
+                <div className="flex flex-col gap-24 md:gap-32">
+                    {/* Hero */}
+                    <section className="relative">
+                        {/* Radial bronze wash */}
+                        <div
+                            aria-hidden
+                            className="absolute inset-0 -z-10 blur-3xl opacity-100"
+                            style={{
+                                background:
+                                    "radial-gradient(ellipse 60% 50% at 80% 20%, hsl(var(--accent) / 0.14), transparent 60%)",
+                            }}
+                        />
 
-        {/* Section 3: Logo Cloud */}
-        <LogoCloud />
+                        <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-10 md:gap-16 items-center">
+                            {/* Copy */}
+                            <div className="flex flex-col gap-6 text-center md:text-left order-2 md:order-1">
+                                <h1 className="font-sans font-semibold text-4xl md:text-6xl tracking-[-0.03em] leading-[1.02] text-balance">
+                                    From Idea to Successful{" "}
+                                    <span
+                                        className="font-bold bg-clip-text text-transparent"
+                                        style={{
+                                            backgroundImage:
+                                                "linear-gradient(to right, hsl(var(--accent)), hsl(var(--accent-bright)), hsl(var(--accent))",
+                                        }}
+                                    >
+                                        Exit
+                                    </span>
+                                </h1>
+                                <p className="font-sans text-lg text-muted-foreground leading-[1.65] max-w-2xl">
+                                    As your Fractional CTO, I work directly with
+                                    your team to turn an idea into a product
+                                    that's built to grow, raise funding, and
+                                    sell. I make the right technical calls
+                                    early, help you hire well, and ship AI that
+                                    actually works in the real world.
+                                </p>
+                                <div className="flex flex-wrap gap-3 justify-center md:justify-start">
+                                    <Button size="lg" href="#booking">
+                                        <ArrowDown className="mr-2.5 h-3.5 w-3.5" />{" "}
+                                        Book a Consultation
+                                    </Button>
+                                    <Button
+                                        variant="outline"
+                                        size="lg"
+                                        href="https://www.linkedin.com/in/yanivtalmor"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        <Linkedin className="mr-2.5 h-3.5 w-3.5" />{" "}
+                                        View LinkedIn
+                                    </Button>
+                                </div>
+                            </div>
 
-        {/* Section 4: Core Expertise */}
-        <section className="flex flex-col gap-4 items-center">
-          <h2 className="text-3xl font-bold">Core Expertise</h2>
-          <div className="flex flex-wrap gap-2 justify-center">
-            <Badge>Fractional CTO</Badge>
-            <Badge>AI/ML</Badge>
-            <Badge>MLOps</Badge>
-            <Badge>Data Architecture</Badge>
-            <Badge>Cloud Infrastructure</Badge>
-            <Badge>Serverless Computing</Badge>
-            <Badge>SaaS Platforms</Badge>
-            <Badge>MVP to Exit</Badge>
-          </div>
-        </section>
+                            {/* Portrait */}
+                            <div className="flex flex-col items-center gap-4 order-1 md:order-2">
+                                <div className="h-64 w-64 md:h-80 md:w-80 rounded-full overflow-hidden border border-border">
+                                    <img
+                                        src="/Yaniv-Talmor-Profile-Square.jpg"
+                                        alt="Yaniv Talmor"
+                                        className="h-full w-full object-cover"
+                                    />
+                                </div>
+                                <div className="text-center">
+                                    <p className="font-sans font-semibold text-base tracking-[-0.01em] text-foreground">Yaniv Talmor</p>
+                                    <p className="font-sans text-[13px] uppercase tracking-[0.18em] text-accent mt-0.5">Fractional CTO</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
 
-        {/* Section 5: Vero Ventures */}
-        <section>
-            <Card className="text-center">
-                <CardHeader>
-                    <CardTitle>What If You Need More Than a CTO?</CardTitle>
-                </CardHeader>
-                <CardContent className="flex flex-col items-center gap-4">
-                    <p>Often, fractional CTO leadership uncovers the need for a dedicated build team. My company, Vero Ventures, provides elite software engineering talent to build and scale your MVP, ensuring my strategic vision is executed with precision.</p>
-                    <Button variant="outline" href="https://veroventures.com/" target="_blank" rel="noopener noreferrer">
-                        Explore Vero Ventures <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
-                </CardContent>
-            </Card>
-        </section>
-        
-        {/* Section 6: Book a Consultation (Calendly) */}
-        <section id="booking" className="flex flex-col gap-4 text-center">
-          <h2 className="text-3xl font-bold">Let's Build Your Vision.</h2>
-          <p className="text-lg text-muted-foreground">Find a time below to discuss your technology goals, AI strategy, or next MVP.</p>
-          <div className="rounded-lg overflow-hidden border">
-             <CalendlyWidget />
-          </div>
-        </section>
-        
-      </div>
-       {/* Section 7: Footer */}
-       <footer className="text-center text-muted-foreground text-sm pt-16">
-        <p>© 2024 Yaniv Talmor. All rights reserved. | <a href="https://www.linkedin.com/in/yanivtalmor" target="_blank" rel="noopener noreferrer" className="underline hover:text-foreground">LinkedIn</a></p>
-      </footer>
-    </main>
-  );
+                    {/* Proven Results */}
+                    <section className="flex flex-col gap-10">
+                        <SectionHeader title="Proven Results" />
+                        <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-border">
+                            {[
+                                {
+                                    title: "Successful AI-SaaS Exit",
+                                    body: "From the ground up, I architected the core AI platform and scaled the team at Dynamic Needs Analysis, leading directly to a successful strategic acquisition.",
+                                    icon: (
+                                        <svg
+                                            width="22"
+                                            height="22"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="1.5"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        >
+                                            <line
+                                                x1="12"
+                                                y1="1"
+                                                x2="12"
+                                                y2="23"
+                                            />
+                                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                                        </svg>
+                                    ),
+                                },
+                                {
+                                    title: "Trusted by Enterprise",
+                                    body: "My AI/ML and MLOps solutions have been trusted to solve complex challenges for industry leaders like BMO, Asurion, and Electronic Arts.",
+                                    icon: (
+                                        <svg
+                                            width="22"
+                                            height="22"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="1.5"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        >
+                                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                                        </svg>
+                                    ),
+                                },
+                                {
+                                    title: "Multi-Sector AI Automation",
+                                    body: "I've built automation tools that drove down operational costs and delivered quantifiable efficiency in FinTech, InsurTech, and LegalTech—proving my ability to apply AI to new domains.",
+                                    icon: (
+                                        <svg
+                                            width="22"
+                                            height="22"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="1.5"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        >
+                                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                                        </svg>
+                                    ),
+                                },
+                            ].map((card) => (
+                                <div
+                                    key={card.title}
+                                    className="p-8 flex flex-col gap-4"
+                                >
+                                    <div className="text-accent">
+                                        {card.icon}
+                                    </div>
+                                    <h3 className="font-sans font-semibold text-xl tracking-[-0.01em]">
+                                        {card.title}
+                                    </h3>
+                                    <p className="font-sans text-[15px] leading-[1.7] text-muted-foreground">
+                                        {card.body}
+                                    </p>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+
+                    {/* Logo Cloud */}
+                    <LogoCloud />
+
+                    {/* Core Expertise */}
+                    <section className="flex flex-col gap-10">
+                        <SectionHeader title="Core Expertise" />
+                        <div className="flex flex-wrap gap-2.5">
+                            {[
+                                "Fractional CTO",
+                                "AI/ML",
+                                "MLOps",
+                                "Data Architecture",
+                                "Cloud Infrastructure",
+                                "Serverless Computing",
+                                "SaaS Platforms",
+                                "MVP to Exit",
+                            ].map((skill) => (
+                                <div
+                                    key={skill}
+                                    className="font-mono text-[11px] uppercase tracking-[0.12em] border border-border bg-transparent px-3 py-1.5 rounded-sm text-foreground hover:border-accent transition-colors duration-500"
+                                >
+                                    <span className="text-emerald mr-1.5">
+                                        ●
+                                    </span>
+                                    {skill}
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+
+                    {/* Vero Ventures */}
+                    <section className="flex flex-col gap-10">
+                        <SectionHeader />
+                        <Card className="p-10 md:p-14">
+                            {/* Bronze corner mark */}
+                            <div className="absolute top-0 left-0 w-6 h-[1px] bg-accent" />
+                            <div className="absolute top-0 left-0 w-[1px] h-6 bg-accent" />
+
+                            <div className="grid grid-cols-1 md:grid-cols-[2fr_3fr] gap-8 md:gap-14">
+                                <div className="flex flex-col gap-3">
+                                    <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
+                                        Vero Ventures
+                                    </span>
+                                    <h3 className="font-sans font-semibold text-2xl tracking-[-0.01em]">
+                                        What If You Need{" "}
+                                        <span className="font-bold text-accent">
+                                            More Than a CTO?
+                                        </span>
+                                    </h3>
+                                </div>
+                                <div className="flex flex-col gap-6">
+                                    <p className="font-sans text-[15px] leading-[1.7] text-muted-foreground">
+                                        Often, fractional CTO leadership
+                                        uncovers the need for a dedicated build
+                                        team. My company, Vero Ventures,
+                                        provides elite software engineering
+                                        talent to build and scale your MVP,
+                                        ensuring my strategic vision is executed
+                                        with precision.
+                                    </p>
+                                    <div>
+                                        <Button
+                                            variant="outline"
+                                            href="https://veroventures.com/"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            Explore Vero Ventures{" "}
+                                            <ArrowRight className="ml-2.5 h-3.5 w-3.5" />
+                                        </Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </Card>
+                    </section>
+
+                    {/* Booking */}
+                    <section id="booking" className="flex flex-col gap-10">
+                        <SectionHeader title="Let's Build Your Vision." />
+                        <p className="font-sans text-lg text-muted-foreground">
+                            Find a time below to discuss your technology goals,
+                            AI strategy, or next MVP.
+                        </p>
+                        <div className="rounded-sm border border-border bg-card overflow-hidden">
+                            <CalendlyWidget />
+                        </div>
+                    </section>
+                </div>
+
+                {/* Footer */}
+                <footer className="mt-24 pt-8 border-t border-border">
+                    <div className="flex flex-col md:flex-row md:justify-between gap-3 items-center md:items-start">
+                        <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                            © {new Date().getFullYear()} Yaniv Talmor. All
+                            rights reserved.
+                        </p>
+                        <a
+                            href="https://www.linkedin.com/in/yanivtalmor"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground hover:text-accent transition-colors duration-300"
+                        >
+                            LinkedIn →
+                        </a>
+                    </div>
+                </footer>
+            </main>
+        </>
+    );
 }
-
