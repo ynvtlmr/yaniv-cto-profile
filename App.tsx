@@ -7,7 +7,11 @@ const cn = (...classes: (string | undefined | null | false)[]) =>
 // --- Theme ---
 function useTheme(): [string, () => void] {
     const [theme, setTheme] = React.useState<string>(() => {
-        return localStorage.getItem("theme") || "light";
+        const saved = localStorage.getItem("theme");
+        if (saved) return saved;
+        return window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light";
     });
 
     React.useEffect(() => {
@@ -322,7 +326,12 @@ export default function App() {
                                     </span>
                                 </h1>
                                 <p className="font-sans text-lg text-muted-foreground leading-[1.65] max-w-2xl">
-                                    As your Fractional CTO, I work directly with your team to turn an idea into a product that's built to grow, raise funding, and sell. I make the right technical calls early, help you hire well, and ship AI that actually works in the real world.
+                                    As your Fractional CTO, I work directly with
+                                    your team to turn an idea into a product
+                                    that's built to grow, raise funding, and
+                                    sell. I make the right technical calls
+                                    early, help you hire well, and ship AI that
+                                    actually works in the real world.
                                 </p>
                                 <div className="flex flex-wrap gap-3 justify-center md:justify-start">
                                     <Button size="lg" href="#booking">
@@ -364,8 +373,23 @@ export default function App() {
                                     title: "Successful AI-SaaS Exit",
                                     body: "From the ground up, I architected the core AI platform and scaled the team at Dynamic Needs Analysis, leading directly to a successful strategic acquisition.",
                                     icon: (
-                                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                                            <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                                        <svg
+                                            width="22"
+                                            height="22"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="1.5"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        >
+                                            <line
+                                                x1="12"
+                                                y1="1"
+                                                x2="12"
+                                                y2="23"
+                                            />
+                                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
                                         </svg>
                                     ),
                                 },
@@ -373,8 +397,17 @@ export default function App() {
                                     title: "Trusted by Enterprise",
                                     body: "My AI/ML and MLOps solutions have been trusted to solve complex challenges for industry leaders like BMO, Asurion, and Electronic Arts.",
                                     icon: (
-                                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                        <svg
+                                            width="22"
+                                            height="22"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="1.5"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        >
+                                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                                         </svg>
                                     ),
                                 },
@@ -382,8 +415,17 @@ export default function App() {
                                     title: "Multi-Sector AI Automation",
                                     body: "I've built automation tools that drove down operational costs and delivered quantifiable efficiency in FinTech, InsurTech, and LegalTech—proving my ability to apply AI to new domains.",
                                     icon: (
-                                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                                        <svg
+                                            width="22"
+                                            height="22"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="1.5"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        >
+                                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
                                         </svg>
                                     ),
                                 },
@@ -392,7 +434,9 @@ export default function App() {
                                     key={card.title}
                                     className="p-8 flex flex-col gap-4"
                                 >
-                                    <div className="text-accent">{card.icon}</div>
+                                    <div className="text-accent">
+                                        {card.icon}
+                                    </div>
                                     <h3 className="font-sans font-semibold text-xl tracking-[-0.01em]">
                                         {card.title}
                                     </h3>
