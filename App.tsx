@@ -201,19 +201,18 @@ const Card: React.FC<{ children: React.ReactNode; className?: string }> = ({
 );
 
 // --- Calendly Widget ---
+const CALENDLY_SCRIPT_SRC =
+    "https://assets.calendly.com/assets/external/widget.js";
+
 const CalendlyWidget = () => {
     React.useEffect(() => {
+        if (document.querySelector(`script[src="${CALENDLY_SCRIPT_SRC}"]`))
+            return;
         const script = document.createElement("script");
         script.type = "text/javascript";
-        script.src = "https://assets.calendly.com/assets/external/widget.js";
+        script.src = CALENDLY_SCRIPT_SRC;
         script.async = true;
         document.body.appendChild(script);
-        return () => {
-            const existingScript = document.querySelector(
-                'script[src="https://assets.calendly.com/assets/external/widget.js"]',
-            );
-            if (existingScript) document.body.removeChild(existingScript);
-        };
     }, []);
 
     return (
@@ -303,7 +302,7 @@ export default function App() {
                             className="absolute inset-0 -z-10 blur-3xl opacity-100"
                             style={{
                                 background:
-                                    "radial-gradient(ellipse 60% 50% at 80% 20%, hsl(32 45% 48% / 0.14), transparent 60%)",
+                                    "radial-gradient(ellipse 60% 50% at 80% 20%, hsl(var(--accent) / 0.14), transparent 60%)",
                             }}
                         />
 
@@ -319,7 +318,7 @@ export default function App() {
                                         className="font-bold bg-clip-text text-transparent"
                                         style={{
                                             backgroundImage:
-                                                "linear-gradient(to right, hsl(32 45% 48%), hsl(38 75% 70%), hsl(32 45% 48%))",
+                                                "linear-gradient(to right, hsl(var(--accent)), hsl(var(--accent-bright)), hsl(var(--accent))",
                                         }}
                                     >
                                         Exit
