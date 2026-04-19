@@ -539,7 +539,7 @@ export default function App() {
                 {/* Footer */}
                 <footer className="mt-24 pt-8 border-t border-border">
                     <div className="flex flex-col md:flex-row md:justify-between gap-3 items-center md:items-start">
-                        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                        <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
                             © {new Date().getFullYear()} Yaniv Talmor. All
                             rights reserved.
                         </p>
@@ -547,7 +547,7 @@ export default function App() {
                             href="https://www.linkedin.com/in/yanivtalmor"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground hover:text-accent transition-colors duration-300"
+                            className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground hover:text-accent transition-colors duration-300"
                         >
                             LinkedIn →
                         </a>
